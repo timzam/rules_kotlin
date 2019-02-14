@@ -40,47 +40,6 @@ class KotlinCompilerPluginArgsEncoder(
             oos.flush()
             return Base64.getEncoder().encodeToString(os.toByteArray())
         }
-
-        private fun encodeMultiMap(options: Map<String, List<String>>): String {
-            val os = ByteArrayOutputStream()
-            val oos = ObjectOutputStream(os)
-
-            oos.writeInt(options.size)
-            for ((key, values) in options.entries) {
-                oos.writeUTF(key)
-
-                oos.writeInt(values.size)
-                for (value in values) {
-                    oos.writeUTF(value)
-                }
-            }
-
-            oos.flush()
-            return Base64.getEncoder().encodeToString(os.toByteArray())
-        }
-    }
-
-    /**
-     * Plugin using the undocumented encoding format for kapt3
-     */
-    inner class PluginArgs internal constructor() {
-        private val tally = mutableMapOf<String, MutableList<String>>()
-
-        operator fun set(key: String, value: String) {
-            check(tally[key] == null) { "value allready set" }
-            tally[key] = mutableListOf(value)
-        }
-
-        fun bindMulti(key: String, value: String) {
-            tally[key].also { if (it != null) it.add(value) else this[key] = value }
-        }
-
-        // "configuration" is an undocumented kapt3 argument. preparing the arguments this way is the only way to get more than one annotation processor class
-        // passed to kotlinc.
-        fun encode(): List<String> = listOf(
-            "-Xplugin=$jarPath",
-            "-P", "plugin:$pluginId:configuration=${encodeMultiMap(tally)}"
-        )
     }
 
     fun encode(context: CompilationTaskContext, task: JvmCompilationTask): List<String> {
@@ -88,24 +47,27 @@ class KotlinCompilerPluginArgsEncoder(
             "-target" to task.info.toolchainInfo.jvm.jvmTarget
         )
         val d = task.directories
-        return if (task.inputs.processorsList.isNotEmpty()) {
-            PluginArgs().let { arg ->
-                arg["sources"] = d.generatedSources.toString()
-                arg["classes"] = d.generatedClasses.toString()
-                arg["stubs"] = d.temp.toString()
-                arg["incrementalData"] = d.temp.toString()
-                arg["javacArguments"] = javacArgs.let(Companion::encodeMap)
-                arg["aptMode"] = "stubsAndApt"
-                arg["correctErrorTypes"] = "true"
-                context.whenTracing {
-                    arg["verbose"] = "true"
-                }
-                arg["processors"] = task.inputs.processorsList.joinToString(",")
-                task.inputs.processorpathsList.forEach { arg.bindMulti("apclasspath", it) }
-                arg.encode()
+        if (task.inputs.processorsList.isNotEmpty()) {
+            val args = mutableListOf("-Xplugin=$jarPath")
+            args.addAll("-P", "plugin:$pluginId:sources=${d.generatedSources}")
+            args.addAll("-P", "plugin:$pluginId:classes=${d.generatedClasses}")
+            args.addAll("-P", "plugin:$pluginId:stubs=${d.temp}")
+            args.addAll("-P", "plugin:$pluginId:incrementalData=${d.temp}")
+            args.addAll("-P", "plugin:$pluginId:javacArguments=${javacArgs.let(Companion::encodeMap)}")
+            args.addAll("-P", "plugin:$pluginId:aptMode=stubsAndApt")
+            args.addAll("-P", "plugin:$pluginId:correctErrorTypes=true")
+            context.whenTracing {
+                args.addAll("-P", "plugin:$pluginId:verbose=true")
             }
+            val processors = task.inputs.processorsList.joinToString(",")
+            args.addAll("-P", "plugin:$pluginId:processors=$processors")
+            task.inputs.processorpathsList.forEach {
+                args.addAll("-P", "plugin:$pluginId:apclasspath=$it")
+            }
+            System.err.println(args)
+            return args
         } else {
-            emptyList()
+            return emptyList()
         }
     }
 }
