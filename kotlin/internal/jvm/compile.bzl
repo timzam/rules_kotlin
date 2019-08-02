@@ -194,9 +194,6 @@ def kt_jvm_compile_action(ctx, rule_kind, output_jar):
     args.add_all("--sources", srcs.all_srcs, omit_if_empty = True)
     args.add_all("--source_jars", srcs.src_jars, omit_if_empty = True)
 
-    if ctx.attr.is_common_sources:
-        args.add_joined("--kotlin_passthrough_flags", "-Xcommon-sources", join_with=" ")
-
     # Collect and prepare plugin descriptor for the worker.
     plugin_info = _merge_plugin_infos(ctx.attr.plugins + ctx.attr.deps)
     if len(plugin_info.annotation_processors) > 0:
