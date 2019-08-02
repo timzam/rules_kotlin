@@ -74,7 +74,7 @@ def kt_js_library_impl(ctx):
     args.add_all("--sources", ctx.files.srcs)
 
     if ctx.attr.is_common_sources:
-        args.add("-Xcommon-sources")
+        args.add("--kotlin_js_passthrough_flags", "-Xcommon-sources")
 
     inputs, _, input_manifests = ctx.resolve_command(tools = [toolchain.kotlinbuilder, toolchain.kotlin_home])
 
