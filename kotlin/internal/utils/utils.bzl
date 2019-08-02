@@ -35,10 +35,7 @@ def _init_builder_args(ctx, rule_kind, module_name):
     args.add("--kotlin_api_version", toolchain.api_version)
     args.add("--kotlin_language_version", toolchain.language_version)
 
-    kotlin_passthrough_flags = "-Xuse-experimental=kotlin.Experimental -Xmulti-platform"
-    if ctx.attr.is_common_sources:
-        kotlin_passthrough_flags += " -Xcommon-sources"
-    args.add("--kotlin_passthrough_flags", kotlin_passthrough_flags)
+    args.add("--kotlin_passthrough_flags", "-Xuse-experimental=kotlin.Experimental -Xmulti-platform")
 
     debug = depset(toolchain.debug)
     for tag in ctx.attr.tags:
