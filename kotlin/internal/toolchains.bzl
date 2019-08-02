@@ -142,6 +142,7 @@ _kt_toolchain = rule(
             providers = [_KtJsInfo],
         ),
         "is_multi_platform": attr.bool(
+            mandatory = False,
             default = False,
         ),
     },
