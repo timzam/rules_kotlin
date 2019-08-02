@@ -73,6 +73,9 @@ def kt_js_library_impl(ctx):
     args.add_all("--kotlin_js_libraries", libraries, omit_if_empty = False)
     args.add_all("--sources", ctx.files.srcs)
 
+    if ctx.attr.is_common_sources:
+        args.add("-Xcommon-sources")
+
     inputs, _, input_manifests = ctx.resolve_command(tools = [toolchain.kotlinbuilder, toolchain.kotlin_home])
 
     ctx.actions.run(

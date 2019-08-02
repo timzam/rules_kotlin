@@ -191,6 +191,10 @@ _common_attr = utils.add_dicts(
         `some_package_path-label_name`.""",
             mandatory = False,
         ),
+        "is_common_sources": attr.bool(
+            mandatory = False,
+            default = False,
+        ),
     },
 )
 
