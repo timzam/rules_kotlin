@@ -36,7 +36,7 @@ def _init_builder_args(ctx, rule_kind, module_name):
     args.add("--kotlin_language_version", toolchain.language_version)
 
     kotlin_passthrough_flags = "-Xuse-experimental=kotlin.Experimental"
-    if (toolchain.is_multi_platform):
+    if (toolchain["is_multi_platform"]):
         kotlin_passthrough_flags += " -Xmulti-platform"
     args.add("--kotlin_passthrough_flags", kotlin_passthrough_flags)
 
