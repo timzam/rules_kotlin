@@ -42,7 +42,8 @@ def _lock_attrs(name, kwargs):
     else:
         kwargs["module_root"] = name + ".js"
     if kwargs.get("module_name") != None:
-        fail("module_name is an internal attribute.")
+#        fail("module_name is an internal attribute.")
+        pass
     else:
         kwargs["module_name"] = name
     return kwargs

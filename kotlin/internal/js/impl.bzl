@@ -126,8 +126,8 @@ def kt_js_import_impl(ctx):
     # Lock the jar name to the label name -- only make an exception for the compiler repo.
     if not (ctx.label.workspace_root.startswith("external/") and ctx.label.workspace_root.endswith(_KT_COMPILER_REPO)):
         expected_basename = "%s.jar" % ctx.label.name
-        if _strip_version(jar_file.basename) != expected_basename:
-            fail("label name %s is not the same as the jar name %s" % (jar_file.basename, expected_basename))
+#        if _strip_version(jar_file.basename) != expected_basename:
+#            fail("label name %s is not the same as the jar name %s" % (jar_file.basename, expected_basename))
 
     args = ctx.actions.args()
     args.add("--jar", jar_file)
