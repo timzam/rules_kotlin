@@ -64,6 +64,9 @@ def kt_js_library_impl(ctx):
         ],
     )
 
+    if toolchain.multti_platform:
+        args.add("--kotlin_js_passthrough_flags", "-Xmulti-platform")
+
     args.add("--output", ctx.outputs.js)
     args.add("--kotlin_js_dir", out_dir.path)
     args.add("--kotlin_output_js_jar", ctx.outputs.jar)

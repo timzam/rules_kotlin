@@ -157,6 +157,10 @@ _kt_toolchain = rule(
             ],
             providers = [_KtJsInfo],
         ),
+        "multi_platform": attr.bool(
+            doc = "-Xmulti-platform flag",
+            default = False,
+        ),
     },
     implementation = _kotlin_toolchain_impl,
     provides = [platform_common.ToolchainInfo],

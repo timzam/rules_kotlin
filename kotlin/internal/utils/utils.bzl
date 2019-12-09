@@ -36,6 +36,9 @@ def _init_builder_args(ctx, rule_kind, module_name):
     args.add("--kotlin_language_version", toolchain.language_version)
     args.add("--kotlin_passthrough_flags", "-Xuse-experimental=kotlin.Experimental")
 
+    if toolchain.multti_platform:
+        args.add("--kotlin_passthrough_flags", "-Xmulti-platform")
+
     debug = depset(toolchain.debug)
     for tag in ctx.attr.tags:
         if tag == "trace":
