@@ -175,7 +175,9 @@ def define_kt_toolchain(
         name,
         language_version = None,
         api_version = None,
-        jvm_target = None):
+        jvm_target = None,
+        multi_platform = None,
+        ):
     """Define the Kotlin toolchain."""
     impl_name = name + "_impl"
     _kt_toolchain(
@@ -183,6 +185,7 @@ def define_kt_toolchain(
         language_version = language_version,
         api_version = api_version,
         jvm_target = jvm_target,
+        multi_platform = multi_platform,
         debug =
             select({
                 "@io_bazel_rules_kotlin//kotlin/internal:builder_debug_trace": ["trace"],
