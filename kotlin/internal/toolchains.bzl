@@ -176,8 +176,7 @@ def define_kt_toolchain(
         language_version = None,
         api_version = None,
         jvm_target = None,
-        multi_platform = None,
-        ):
+        multi_platform = None):
     """Define the Kotlin toolchain."""
     impl_name = name + "_impl"
     _kt_toolchain(
