@@ -68,6 +68,7 @@ def _kotlin_toolchain_impl(ctx):
         kotlin_home = ctx.attr.kotlin_home,
         jvm_stdlibs = java_common.merge(compile_time_providers + runtime_providers),
         js_stdlibs = ctx.attr.js_stdlibs,
+        multi_platform = ctx.attr.multi_platform,
     )
     return [
         platform_common.ToolchainInfo(**toolchain),
