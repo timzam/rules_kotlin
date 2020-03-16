@@ -57,6 +57,7 @@ def kt_js_library_impl(ctx):
             "-source-map",
             "-meta-info",
             "-no-stdlib",  # TODO remove this once the stdlib is not conveyed to node via the deps attribute.
+            "-Xuse-experimental=kotlin.Experimental",
             "-Xmulti-platform",
             "-module-kind",
             ctx.attr.module_kind,
